@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>💌 A little something I made for you</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+<main class="wrap">
+<div class="card">
+<h1 class="title">For the one who deserves more than just<br><span>“Happy Valentine’s Day”</span></h1>
+
+<button class="envelope" id="envelopeBtn" aria-label="Open the letter">
+<div class="env-body"></div>
+<div class="env-flap" id="flap"></div>
+<div class="seal" aria-hidden="true">💗</div>
+<div class="hint" id="hint">Tap to open</div>
+</button>
+
+<section class="letter" id="letter" aria-live="polite">
+<div class="letter-inner">
+<div class="letter-top">
+<div class="stamp">💌</div>
+<div class="hearts">♡ ♡ ♡</div>
+</div>
+
+<h2>Happy Valentine’s Day, <span class="name">Rabab</span> 🩷</h2>
+
+<p>
+I just wanted you to know I’m really grateful for you.
+You make my days brighter, and funnier.
+</p>
+
+<p class="result" id="result"></p>
+
+<div class="footer">
+<span>— from <span class="from">Indie</span></span>
+</div>
+</div>
+</section>
+</div>
+
+<!-- Optional music (add your own mp3 in the repo and uncomment) -->
+<!-- <audio id="bgm" src="music.mp3" loop></audio> -->
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
