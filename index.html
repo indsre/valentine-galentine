@@ -3,49 +3,220 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>💌 A little something I made for you</title>
-<link rel="stylesheet" href="style.css" />
+<title>💌 Valentine</title>
+
+<style>
+:root{
+  --bg1:#ffe8f3;
+  --bg2:#ffd1e6;
+
+  --env1:#ff7eb6;
+  --env2:#ff4da6;
+  --env3:#ffd1e8;
+
+  --paper:#fffafc;
+  --ink:#2b1b22;
+  --muted: rgba(43,27,34,.65);
+
+  --shadow: rgba(0,0,0,.18);
+}
+
+*{ box-sizing:border-box; }
+
+html, body { height:100%; }
+body{
+  margin:0;
+  font-family: ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color:var(--ink);
+  overflow:hidden;
+  background: linear-gradient(135deg, var(--bg1), var(--bg2));
+}
+
+.stage{
+  height:100%;
+  width:100%;
+  display:grid;
+  place-items:center;
+  position:relative;
+}
+
+/* subtle floral dots */
+.bg-flowers{
+  position:absolute;
+  inset:-40px;
+  opacity:.28;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255,77,166,.18) 0 2px, transparent 3px),
+    radial-gradient(circle at 22% 26%, rgba(255,77,166,.18) 0 2px, transparent 3px),
+    radial-gradient(circle at 20% 30%, rgba(255,77,166,.18) 0 2px, transparent 3px),
+    radial-gradient(circle at 78% 18%, rgba(255,77,166,.18) 0 2px, transparent 3px),
+    radial-gradient(circle at 82% 22%, rgba(255,77,166,.18) 0 2px, transparent 3px),
+    radial-gradient(circle at 80% 26%, rgba(255,77,166,.18) 0 2px, transparent 3px);
+  pointer-events:none;
+}
+
+/* Full-screen envelope */
+.envelope{
+  position:relative;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  width:min(920px, 92vw);
+  height:min(620px, 74vh);
+  outline:none;
+  display:block;
+}
+
+/* back panel */
+.env-back{
+  position:absolute;
+  inset:0;
+  border-radius:28px;
+  background: linear-gradient(180deg, var(--env1), var(--env2));
+  box-shadow: 0 30px 70px var(--shadow);
+  border: 1px solid rgba(255,255,255,.20);
+}
+
+/* pocket */
+.env-pocket{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:62%;
+  border-bottom-left-radius:28px;
+  border-bottom-right-radius:28px;
+  background:
+    linear-gradient(135deg, transparent 50%, rgba(255,255,255,.14) 50%) left,
+    linear-gradient(225deg, transparent 50%, rgba(255,255,255,.14) 50%) right;
+  background-size:50% 100%;
+  background-repeat:no-repeat;
+}
+
+/* flap */
+.env-flap{
+  position:absolute;
+  left:0; right:0; top:0;
+  height:62%;
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transition: transform 700ms cubic-bezier(.2,.9,.25,1);
+}
+.env-flap::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(180deg, var(--env3), rgba(255,255,255,.35));
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border-top-left-radius:28px;
+  border-top-right-radius:28px;
+}
+
+/* seal */
+.seal{
+  position:absolute;
+  left:50%;
+  top:52%;
+  transform: translate(-50%, -50%);
+  width:96px;
+  height:96px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  background: radial-gradient(circle at 30% 30%, #fff, #ff91c7);
+  box-shadow: 0 18px 35px rgba(0,0,0,.16);
+  font-size:34px;
+  color:#ff2f87;
+}
+
+/* paper */
+.paper{
+  position:absolute;
+  left:50%;
+  bottom:14%;
+  transform: translate(-50%, 120px);
+  width:min(640px, 78%);
+  opacity:0;
+}
+
+.paper-inner{
+  background: linear-gradient(180deg, var(--paper), #ffffff);
+  border-radius:18px;
+  box-shadow: 0 22px 50px rgba(0,0,0,.14);
+  padding:24px;
+}
+
+.paper h1{
+  margin: 6px 0 14px;
+  font-size: clamp(22px, 3.2vw, 34px);
+  text-align:center;
+}
+
+.paper p{
+  margin: 10px 0;
+  line-height:1.6;
+  font-size: clamp(15px, 2vw, 18px);
+}
+
+.from{
+  margin-top:16px;
+  text-align:right;
+  font-weight:800;
+  color: var(--muted);
+}
+
+/* open state */
+.open .env-flap{
+  transform: rotateX(165deg);
+}
+
+.open .paper{
+  animation: slideUp 900ms cubic-bezier(.2,.9,.25,1) forwards;
+  opacity:1;
+}
+
+@keyframes slideUp{
+  from{
+    transform: translate(-50%, 120px);
+  }
+  to{
+    transform: translate(-50%, -140px);
+  }
+}
+</style>
 </head>
 
 <body>
-<main class="wrap">
-<div class="card">
-<h1 class="title">For the one who deserves more than just<br><span>“Happy Valentine’s Day”</span></h1>
+<main class="stage" id="stage">
+  <div class="bg-flowers"></div>
 
-<button class="envelope" id="envelopeBtn" aria-label="Open the letter">
-<div class="env-body"></div>
-<div class="env-flap" id="flap"></div>
-<div class="seal" aria-hidden="true">💗</div>
-<div class="hint" id="hint">Tap to open</div>
-</button>
+  <button class="envelope" id="openBtn">
+    <div class="env-back"></div>
+    <div class="env-pocket"></div>
+    <div class="env-flap"></div>
+    <div class="seal">♥</div>
 
-<section class="letter" id="letter" aria-live="polite">
-<div class="letter-inner">
-<div class="letter-top">
-<div class="stamp">💌</div>
-<div class="hearts">♡ ♡ ♡</div>
-</div>
+    <section class="paper">
+      <div class="paper-inner">
+        <h1>Happy Valentine’s Day 💖</h1>
 
-<h2>Happy Valentine’s Day, <span class="name">Rabab</span> 🩷</h2>
+        <p>
+          I just wanted you to know I’m really grateful for you.
+          You make my day brighter and funnier.
+        </p>
 
-<p>
-I just wanted you to know I’m really grateful for you.
-You make my days brighter, and funnier.
-</p>
-
-<p class="result" id="result"></p>
-
-<div class="footer">
-<span>— from <span class="from">Indie</span></span>
-</div>
-</div>
-</section>
-</div>
-
-<!-- Optional music (add your own mp3 in the repo and uncomment) -->
-<!-- <audio id="bgm" src="music.mp3" loop></audio> -->
+        <p class="from">— from Indie</p>
+      </div>
+    </section>
+  </button>
 </main>
 
-<script src="script.js"></script>
+<script>
+const stage = document.getElementById("stage");
+const openBtn = document.getElementById("openBtn");
+
+openBtn.addEventListener("click", () => {
+  stage.classList.toggle("open");
+});
+</script>
+
 </body>
 </html>
