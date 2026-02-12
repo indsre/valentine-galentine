@@ -8,225 +8,300 @@
 <style>
 :root{
   --cream:#f6efe6;
-  --soft-beige:#ede3d7;
-  --laptop:#e5e0d8;
-  --env-red:#b5121a;
-  --env-red-dark:#8f0f16;
+  --soft:#ede3d7;
+
+  --window:#f3f1ee;
+  --windowTop:#e6e2dd;
+  --windowBorder:#d4cdc4;
+  --windowShadow: rgba(0,0,0,.20);
+
+  --envRed:#b5121a;
+  --envRed2:#8f0f16;
+
   --paper:#fffdf9;
-  --ink:#4b2e2e;
+  --paperLine: rgba(160, 110, 120, .14);
+
+  --ink:#2b1b22;
+  --muted: rgba(43,27,34,.70);
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
 
 body{
-  background:linear-gradient(180deg,var(--cream),var(--soft-beige));
-  font-family: Georgia, "Times New Roman", serif;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  color:#3e2a2a;
-}
-
-/* Heading */
-.header{
-  font-size:36px;
-  font-weight:700;
-  margin-bottom:40px;
-}
-
-/* Laptop frame */
-.browser{
-  width:min(850px,95%);
-  background:var(--laptop);
-  border-radius:18px;
-  box-shadow:0 30px 70px rgba(0,0,0,.18);
-  overflow:hidden;
-}
-
-.browser-top{
-  background:#d9d4cc;
-  padding:12px 18px;
-  display:flex;
-  gap:8px;
-}
-
-.dot{
-  width:12px;height:12px;
-  border-radius:50%;
-  background:#bdb7ad;
-}
-
-/* Envelope area */
-.envelope-area{
-  background:transparent;
-  padding:60px 20px 80px;
-  display:flex;
-  justify-content:center;
-}
-
-.envelope{
-  width:420px;
-  height:260px;
-  position:relative;
-  cursor:pointer;
-}
-
-/* Base */
-.env-body{
-  position:absolute;
-  inset:0;
-  background:var(--env-red-dark);
-  border-radius:8px;
-}
-
-/* Pocket */
-.env-body::before{
-  content:"";
-  position:absolute;
-  bottom:0;
-  left:0;
-  width:100%;
-  height:100%;
+  margin:0;
+  font-family: ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   background:
-    linear-gradient(135deg, transparent 50%, var(--env-red) 50%) left,
-    linear-gradient(225deg, transparent 50%, var(--env-red) 50%) right;
+    radial-gradient(900px 600px at 20% 10%, rgba(255,255,255,.65), transparent 60%),
+    radial-gradient(900px 600px at 80% 90%, rgba(255,255,255,.55), transparent 60%),
+    linear-gradient(180deg, var(--cream), var(--soft));
+  color: var(--ink);
+}
+
+/* page title */
+.topbar{
+  position:fixed;
+  left:0; right:0; top:0;
+  padding:22px 14px 10px;
+  display:flex;
+  justify-content:center;
+  z-index:10;
+  pointer-events:none;
+}
+.topbar h1{
+  margin:0;
+  font-weight:900;
+  font-size: clamp(24px, 3.2vw, 42px);
+  letter-spacing:.2px;
+}
+
+/* layout */
+.wrap{
+  height:100%;
+  display:grid;
+  place-items:center;
+  padding: 92px 18px 22px;
+}
+
+/* browser window */
+.window{
+  width:min(920px, 96vw);
+  aspect-ratio: 16 / 9;
+  background: var(--window);
+  border: 1px solid var(--windowBorder);
+  border-radius: 18px;
+  box-shadow: 0 30px 80px var(--windowShadow);
+  overflow:hidden;                 
+  position:relative;
+}
+
+.windowTop{
+  height:44px;
+  background: linear-gradient(180deg, #faf9f7, var(--windowTop));
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  display:flex;
+  align-items:center;
+  padding: 0 14px;
+  gap:10px;
+}
+.dots{ display:flex; gap:7px; }
+.dot{
+  width:11px; height:11px; border-radius:999px;
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,.10);
+}
+.dot:nth-child(1){ background:#d7a4a4; }
+.dot:nth-child(2){ background:#d8c28f; }
+.dot:nth-child(3){ background:#9bc7a5; }
+
+.addr{
+  flex:1;
+  height:26px;
+  border-radius:999px;
+  background:#ffffff;
+  border:1px solid rgba(0,0,0,.08);
+  display:flex;
+  align-items:center;
+  padding: 0 12px;
+  color:#666;
+  font-size:12px;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.addr::before{ content:"🔒"; margin-right:8px; opacity:.8; }
+
+/* stage INSIDE the window and clipped */
+.stage{
+  position:absolute;
+  inset:44px 0 0 0;
+  display:grid;
+  place-items:center;
+  padding: 18px;
+  overflow:hidden;                 
+}
+
+/* envelope button */
+.envelopeBtn{
+  width:min(760px, 92%);
+  aspect-ratio: 16 / 10;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  position:relative;
+  outline:none;
+}
+
+/* envelope pieces */
+.envBase{
+  position:absolute; inset:0;
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--envRed), var(--envRed2));
+  box-shadow: 0 26px 60px rgba(0,0,0,.18);
+}
+
+.envPocket{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:62%;
+  border-bottom-left-radius:18px;
+  border-bottom-right-radius:18px;
+  background:
+    linear-gradient(135deg, transparent 50%, rgba(255,255,255,.12) 50%) left,
+    linear-gradient(225deg, transparent 50%, rgba(255,255,255,.12) 50%) right;
   background-size:50% 100%;
   background-repeat:no-repeat;
+  z-index:4; /* sits above paper */
 }
 
-/* Flap */
-.env-flap{
+.envFlap{
   position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  height:60%;
-  background:var(--env-red);
-  clip-path:polygon(0 0,100% 0,50% 100%);
-  transform-origin:top;
-  transition:transform 700ms ease;
+  left:0; right:0; top:0;
+  height:62%;
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transition: transform 700ms cubic-bezier(.2,.9,.25,1);
+  filter: drop-shadow(0 14px 18px rgba(0,0,0,.14));
+  z-index:5;
+}
+.envFlap:before{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.03));
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border-top-left-radius:18px;
+  border-top-right-radius:18px;
 }
 
-/* Seal */
 .seal{
   position:absolute;
-  left:50%;
-  top:52%;
-  transform:translate(-50%,-50%);
-  width:80px;
-  height:80px;
-  border-radius:50%;
-  background:radial-gradient(circle at 30% 30%, #ffd6e0, #ff7aa8);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:28px;
-  color:#7a1d1d;
-  box-shadow:0 12px 25px rgba(0,0,0,.25);
-  transition:opacity .3s ease;
+  left:50%; top:52%;
+  transform: translate(-50%,-50%);
+  width:92px; height:92px;
+  border-radius:999px;
+  background: radial-gradient(circle at 30% 30%, #fff0f6, #ff86bf);
+  border: 1px solid rgba(255,255,255,.38);
+  box-shadow: 0 18px 35px rgba(0,0,0,.18);
+  display:grid;
+  place-items:center;
+  z-index:6;
+  transition: opacity 180ms ease;
 }
+.seal span{ font-size:32px; color:#8a0d19; }
 
-/* Paper */
+
 .paper{
   position:absolute;
   left:50%;
-  bottom:20px;
-  transform:translate(-50%,100px);
-  width:360px;
-  background:var(--paper);
-  padding:28px 24px;
-  border-radius:10px;
-  box-shadow:0 20px 40px rgba(0,0,0,.2);
+  bottom:16%;
+  width:min(600px, 78%);
+  transform: translate(-50%, 120px);
   opacity:0;
-  transition:all 800ms cubic-bezier(.2,.9,.25,1);
-  background-image:
+  z-index:3; /* under pocket & seal */
+}
+
+.paperInner{
+  border-radius: 16px;
+  padding: 18px 18px 14px;
+  background:
     repeating-linear-gradient(
       to bottom,
-      transparent 0px,
-      transparent 28px,
-      #f0d6d6 29px
+      var(--paper) 0px,
+      var(--paper) 26px,
+      var(--paperLine) 27px,
+      var(--paperLine) 28px
     );
+  box-shadow: 0 22px 50px rgba(0,0,0,.16);
+  border: 1px solid rgba(0,0,0,.06);
 }
 
-.paper h2{
-  font-family:"Brush Script MT", cursive;
-  font-size:30px;
-  margin-bottom:12px;
-  color:#8b1f1f;
+.paperInner h2{
+  margin: 2px 0 10px;
+  text-align:center;
+  color: #8a0d19;
+  font-size: clamp(20px, 2.7vw, 30px);
 }
 
-.paper p{
-  font-size:18px;
-  line-height:1.6;
-  color:var(--ink);
+.paperInner p{
+  margin:10px 0;
+  line-height:1.55;
+  font-size: clamp(14px, 1.9vw, 18px);
+  color: var(--ink);
 }
 
 .from{
-  margin-top:16px;
   text-align:right;
-  font-style:italic;
+  font-weight:900;
+  color: var(--muted);
+  margin-top:12px;
 }
 
-/* OPEN STATE */
-.open .env-flap{
-  transform:rotateX(180deg);
-}
+/* open */
+.open .envFlap{ transform: rotateX(165deg); }
+.open .seal{ opacity:.65; }
 
 .open .paper{
-  transform:translate(-50%,-130px);
   opacity:1;
+  animation: slideUp 850ms cubic-bezier(.2,.9,.25,1) forwards;
 }
 
-.open .seal{
-  opacity:.6;
+/* IMPORTANT: capped lift (safe inside window) */
+@keyframes slideUp{
+  from{ transform: translate(-50%, 120px); }
+  to{ transform: translate(-50%, -40px); } /* does NOT reach windowTop */
 }
 
-/* Mobile */
-@media (max-width:480px){
-  .header{font-size:28px;}
-  .envelope{width:320px;height:210px;}
-  .paper{width:280px;}
+/* mobile */
+@media (max-width:520px){
+  .window{ aspect-ratio: 9 / 16; }
+  @keyframes slideUp{
+    from{ transform: translate(-50%, 110px); }
+    to{ transform: translate(-50%, -22px); }
+  }
 }
 </style>
 </head>
 
 <body>
-
-<div class="header">To Rabab </div>
-
-<div class="browser">
-  <div class="browser-top">
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
+  <div class="topbar">
+    <h1>To Rabab </h1>
   </div>
 
-  <div class="envelope-area">
-    <div class="envelope" id="env">
-      <div class="env-body"></div>
-      <div class="env-flap"></div>
-      <div class="seal">♥</div>
+  <div class="wrap">
+    <div class="window">
+      <div class="windowTop">
+        <div class="dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div class="addr">valentine://to-rabab</div>
+      </div>
 
-      <div class="paper">
-        <h2>Happy Valentine’s Day 💗</h2>
-        <p>
-          I just wanted you to know I’m really grateful for you.
-          You make my day brighter and funnier.
-        </p>
-        <p class="from">— from Indie</p>
+      <div class="stage">
+        <button class="envelopeBtn" id="openBtn" aria-label="Open envelope">
+          <div class="envBase"></div>
+
+          <div class="paper" id="paper" aria-live="polite">
+            <div class="paperInner">
+              <h2>Happy Valentine’s Day </h2>
+              <p>
+                I just wanted you to know I’m really grateful for you.
+                You make my day brighter and funnier.
+              </p>
+              <p class="from">— from Indie</p>
+            </div>
+          </div>
+
+          <div class="envPocket"></div>
+          <div class="envFlap"></div>
+
+          <div class="seal" aria-hidden="true"><span>♥</span></div>
+        </button>
       </div>
     </div>
   </div>
-</div>
 
 <script>
-const env = document.getElementById("env");
-env.addEventListener("click",()=>{
-  env.classList.toggle("open");
-});
+  const btn = document.getElementById("openBtn");
+  btn.addEventListener("click", () => btn.classList.toggle("open"));
 </script>
-
 </body>
 </html>
