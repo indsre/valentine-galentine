@@ -19,8 +19,6 @@
   --envRed2:#8f0f16;
 
   --paper:#fffdf9;
-  --paperLine: rgba(160, 110, 120, .14);
-
   --ink:#2b1b22;
   --muted: rgba(43,27,34,.70);
 }
@@ -71,7 +69,7 @@ body{
   border: 1px solid var(--windowBorder);
   border-radius: 18px;
   box-shadow: 0 30px 80px var(--windowShadow);
-  overflow:hidden;                 
+  overflow:hidden;              
   position:relative;
 }
 
@@ -110,19 +108,19 @@ body{
 }
 .addr::before{ content:"🔒"; margin-right:8px; opacity:.8; }
 
-/* stage INSIDE the window and clipped */
+/* stage inside window */
 .stage{
   position:absolute;
   inset:44px 0 0 0;
   display:grid;
   place-items:center;
   padding: 18px;
-  overflow:hidden;                 
+  overflow:hidden;                
 }
 
-/* envelope button */
+/* envelope button — constrained so it never touches edges */
 .envelopeBtn{
-  width:min(760px, 92%);
+  width:min(720px, 88%);         
   aspect-ratio: 16 / 10;
   border:0;
   background:transparent;
@@ -139,6 +137,7 @@ body{
   box-shadow: 0 26px 60px rgba(0,0,0,.18);
 }
 
+/* pocket */
 .envPocket{
   position:absolute;
   left:0; right:0; bottom:0;
@@ -150,9 +149,10 @@ body{
     linear-gradient(225deg, transparent 50%, rgba(255,255,255,.12) 50%) right;
   background-size:50% 100%;
   background-repeat:no-repeat;
-  z-index:4; /* sits above paper */
+  z-index:4;
 }
 
+/* flap */
 .envFlap{
   position:absolute;
   left:0; right:0; top:0;
@@ -172,6 +172,7 @@ body{
   border-top-right-radius:18px;
 }
 
+/* seal (heart stamp) */
 .seal{
   position:absolute;
   left:50%; top:52%;
@@ -184,32 +185,24 @@ body{
   display:grid;
   place-items:center;
   z-index:6;
-  transition: opacity 180ms ease;
+  transition: opacity 220ms ease, transform 220ms ease;
 }
 .seal span{ font-size:32px; color:#8a0d19; }
 
-
+/* plain paper (NO LINES) */
 .paper{
   position:absolute;
   left:50%;
-  bottom:16%;
+  bottom:18%;
   width:min(600px, 78%);
   transform: translate(-50%, 120px);
   opacity:0;
-  z-index:3; /* under pocket & seal */
+  z-index:3;
 }
-
 .paperInner{
   border-radius: 16px;
   padding: 18px 18px 14px;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      var(--paper) 0px,
-      var(--paper) 26px,
-      var(--paperLine) 27px,
-      var(--paperLine) 28px
-    );
+  background: var(--paper);        /* plain */
   box-shadow: 0 22px 50px rgba(0,0,0,.16);
   border: 1px solid rgba(0,0,0,.06);
 }
@@ -220,14 +213,12 @@ body{
   color: #8a0d19;
   font-size: clamp(20px, 2.7vw, 30px);
 }
-
 .paperInner p{
   margin:10px 0;
   line-height:1.55;
   font-size: clamp(14px, 1.9vw, 18px);
   color: var(--ink);
 }
-
 .from{
   text-align:right;
   font-weight:900;
@@ -237,25 +228,32 @@ body{
 
 /* open */
 .open .envFlap{ transform: rotateX(165deg); }
-.open .seal{ opacity:.65; }
+
+/* stamp disappears when open */
+.open .seal{
+  opacity:0;
+  transform: translate(-50%,-50%) scale(.92);
+  pointer-events:none;
+}
 
 .open .paper{
   opacity:1;
   animation: slideUp 850ms cubic-bezier(.2,.9,.25,1) forwards;
 }
 
-/* IMPORTANT: capped lift (safe inside window) */
+/* capped lift so it stays inside the window */
 @keyframes slideUp{
   from{ transform: translate(-50%, 120px); }
-  to{ transform: translate(-50%, -40px); } /* does NOT reach windowTop */
+  to{ transform: translate(-50%, -32px); }
 }
 
 /* mobile */
 @media (max-width:520px){
   .window{ aspect-ratio: 9 / 16; }
+  .envelopeBtn{ width:min(520px, 92%); }
   @keyframes slideUp{
     from{ transform: translate(-50%, 110px); }
-    to{ transform: translate(-50%, -22px); }
+    to{ transform: translate(-50%, -20px); }
   }
 }
 </style>
@@ -279,7 +277,7 @@ body{
         <button class="envelopeBtn" id="openBtn" aria-label="Open envelope">
           <div class="envBase"></div>
 
-          <div class="paper" id="paper" aria-live="polite">
+          <div class="paper" aria-live="polite">
             <div class="paperInner">
               <h2>Happy Valentine’s Day </h2>
               <p>
